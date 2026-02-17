@@ -1,0 +1,87 @@
+/* FONTS */
+@font-face {
+    font-family: 'Ambiguity Tradition';
+    src: url('/fonts/AmbiguityTradition-Inline.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Ambiguity Thrift Light';
+    src: url('/fonts/AmbiguityTradition-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Ambiguity Thrift';
+    src: url('/fonts/AmbiguityTradition-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --brand-blood: #751E19;
+    --brand-night: #1A1420;
+    --brand-marble: #F2F0EC;
+    --font-tradition: 'Ambiguity Tradition', 'Cinzel', serif;
+    --font-thrift: 'Ambiguity Thrift Light', 'Bodoni Moda', serif;
+    --font-thrift-bold: 'Ambiguity Thrift', 'Bodoni Moda', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--brand-marble);
+    color: var(--brand-night);
+    -webkit-font-smoothing: antialiased;
+    cursor: auto;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    scrollbar-gutter: stable;
+}
+
+/* UTILITIES */
+.font-tradition {
+    font-family: var(--font-tradition);
+    text-transform: uppercase;
+}
+
+.font-thrift {
+    font-family: var(--font-thrift);
+    font-weight: 300;
+}
+
+.font-thrift-bold {
+    font-family: var(--font-thrift-bold);
+    font-weight: bold;
+}
+
+/* NOISE OVERLAY */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    mix-blend-mode: multiply;
+}
+
+/* SCROLLBAR HIDDEN */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* SELECTION */
+::selection {
+    background: var(--brand-blood);
+    color: white;
+}

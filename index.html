@@ -8,66 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Plus+Jakarta+Sans:wght@200;300;400;700&display=swap" rel="stylesheet">
-    <style>
-        /* FONTS */
-        @font-face {
-            font-family: 'Ambiguity Tradition Inline';
-            src: url('/fonts/AmbiguityTradition-Inline.otf') format('opentype');
-            font-weight: normal; font-style: normal; font-display: swap;
-        }
-        @font-face {
-            font-family: 'Ambiguity Thrift Light';
-            src: url('/fonts/AmbiguityThrift-Light.otf') format('opentype');
-            font-weight: 300; font-style: normal; font-display: swap;
-        }
-        @font-face {
-            font-family: 'Ambiguity Thrift';
-            src: url('/fonts/AmbiguityThrift-Bold.otf') format('opentype');
-            font-weight: bold; font-style: normal; font-display: swap;
-        }
-
-        :root {
-            --brand-blood: #751E19;
-            --brand-night: #1A1420;
-            --brand-marble: #F2F0EC; /* Un mármol ligeramente más cálido para contraste */
-            --font-tradition: 'Ambiguity Tradition Inline', 'Cinzel', serif;
-            --font-thrift: 'Ambiguity Thrift Light', 'Bodoni Moda', serif;
-            --font-thrift-bold: 'Ambiguity Thrift', 'Bodoni Moda', serif;
-            --font-sans: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--brand-marble);
-            color: var(--brand-night);
-            -webkit-font-smoothing: antialiased;
-            cursor: auto;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* UTILITIES */
-        .font-tradition { font-family: var(--font-tradition); text-transform: uppercase; }
-        .font-thrift { font-family: var(--font-thrift); font-weight: 300; }
-        .font-thrift-bold { font-family: var(--font-thrift-bold); font-weight: bold; }
-        
-        /* NOISE OVERLAY */
-        .noise-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9998;
-            mix-blend-mode: multiply;
-        }
-
-        /* SCROLLBAR HIDDEN */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-        
-        /* SELECTION */
-        ::selection { background: var(--brand-blood); color: white; }
-    </style>
+    <link rel="stylesheet" href="/index.css">
 <script type="importmap">
 {
   "imports": {
