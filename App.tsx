@@ -8,6 +8,7 @@ import ColorPalette from './components/ColorPalette';
 import Typography from './components/Typography';
 import Mockups from './components/Mockups';
 import VoiceAndTone from './components/VoiceAndTone';
+import Motion from './components/Motion';
 
 /* ─── Scroll-reactive hero icon ─── */
 const HeroIcon = ({ children }: { children: React.ReactNode }) => {
@@ -36,6 +37,7 @@ const HeroIcon = ({ children }: { children: React.ReactNode }) => {
 const App: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [pendingSection, setPendingSection] = useState<string | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Lock body scroll when a category is open
@@ -55,11 +57,24 @@ const App: React.FC = () => {
     }
   }, [activeSection]);
 
+  // Activate pending section after menu exit animation completes
+  const handleMenuExitComplete = () => {
+    if (pendingSection) {
+      setActiveSection(pendingSection);
+      setPendingSection(null);
+    }
+  };
+
   const navItems = ['Voz', 'Logo', 'Tipografia', 'Color', 'Imagenes', 'Motion'];
 
   const handleNavClick = (item: string) => {
-    setActiveSection(item);
-    setMenuOpen(false);
+    setPendingSection(item);
+    if (menuOpen) {
+      setMenuOpen(false);
+    } else {
+      setActiveSection(item);
+      setPendingSection(null);
+    }
   };
 
   const goToHome = () => {
@@ -71,6 +86,7 @@ const App: React.FC = () => {
   const backToGrid = () => {
     setActiveSection(null);
     setMenuOpen(false);
+    setPendingSection(null);
   };
 
   const renderActiveSection = () => {
@@ -80,7 +96,7 @@ const App: React.FC = () => {
       case 'Tipografia': return <Typography />;
       case 'Color': return <ColorPalette />;
       case 'Imagenes': return <Mockups />;
-      case 'Motion': return <LogoSystem />;
+      case 'Motion': return <Motion />;
       default: return null;
     }
   };
@@ -142,6 +158,10 @@ const App: React.FC = () => {
               <motion.div
                 key="category-overlay"
                 ref={overlayRef}
+                initial={false}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
                 className={`fixed inset-0 z-50 overflow-y-auto overflow-x-hidden ${solidBaseClass}`}
               >
                 {/* Fixed header – always on top */}
@@ -168,14 +188,28 @@ const App: React.FC = () => {
                 >
                   <div className="absolute inset-0 opacity-[0.03] noise-overlay" />
 
-                  {/* Background icon – subtle, reacts to scroll */}
-                  <HeroIcon>{config.bgIcon}</HeroIcon>
+                  {/* Background icon – scaled down to not clash with title */}
+                  <motion.div
+                    className="absolute inset-y-0 right-0 w-full md:w-1/2 h-full flex items-center justify-center overflow-hidden pointer-events-none"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.65 }}
+                    transition={{ delay: 0.15, duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                    <div className="w-full h-full flex items-center justify-center p-12 md:p-20 [&_svg]:!max-w-none [&_svg]:w-full [&_svg]:max-h-[50vh] [&_svg]:!opacity-100">
+                      {config.bgIcon}
+                    </div>
+                  </motion.div>
 
                   {/* Title */}
-                  <div className="relative z-10 text-left pointer-events-none mt-20 max-w-full md:max-w-[60%]">
+                  <motion.div
+                    className="relative z-10 text-left pointer-events-none mt-20 max-w-full md:max-w-[60%]"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                  >
                     <motion.h1
                       layoutId={`category-title-${activeSection}`}
-                      transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                      transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
                       className={`font-thrift ${fontSizeClass} uppercase leading-[0.8] tracking-tighter origin-bottom-left`}
                     >
                       {activeSection}
@@ -187,13 +221,18 @@ const App: React.FC = () => {
                       transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
                       className="mt-8 md:mt-12 h-px bg-current origin-left ml-2 md:ml-4"
                     />
-                  </div>
+                  </motion.div>
                 </motion.div>
 
                 {/* Content section */}
-                <div className="relative bg-[#F2F0EC] min-h-[50vh] z-10">
+                <motion.div
+                  className="relative bg-[#F2F0EC] min-h-[50vh] z-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.4, ease: "easeOut" }}
+                >
                   {renderActiveSection()}
-                </div>
+                </motion.div>
               </motion.div>
             );
           })()}
@@ -202,16 +241,20 @@ const App: React.FC = () => {
         {/* ═══════════════════════════════════════════════════════════
             MENU OVERLAY
            ═══════════════════════════════════════════════════════════ */}
-        <AnimatePresence>
+        <AnimatePresence mode="wait" onExitComplete={handleMenuExitComplete}>
           {menuOpen && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
               className="fixed inset-0 z-[100] bg-[#751E19] flex items-center justify-center"
             >
               <button
-                onClick={() => setMenuOpen(false)}
+                onClick={() => {
+                  setPendingSection(null);
+                  setMenuOpen(false);
+                }}
                 className="absolute top-8 right-8 text-[#F2F0EC] hover:rotate-90 transition-transform duration-500 interactive p-4"
               >
                 <X size={40} />
@@ -222,6 +265,8 @@ const App: React.FC = () => {
                   onClick={goToHome}
                   initial={{ y: 50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -30, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
                   className="font-mono text-sm uppercase tracking-widest text-[#F2F0EC]/60 hover:text-white mb-8"
                 >
                   — Inicio —
@@ -233,7 +278,8 @@ const App: React.FC = () => {
                     onClick={() => handleNavClick(item)}
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.1 }}
+                    exit={{ y: -30, opacity: 0 }}
+                    transition={{ delay: i * 0.06, duration: 0.25 }}
                     className={`font-tradition text-5xl md:text-8xl transition-colors interactive cursor-pointer ${activeSection === item ? 'text-[#1A1420]' : 'text-[#F2F0EC] hover:text-[#1A1420]'}`}
                   >
                     {item}
